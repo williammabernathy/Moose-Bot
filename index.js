@@ -22,17 +22,18 @@ bot.on('ready', () => {
 // get the most recently typed message and parse
 bot.on('message', msg => {
   if (msg.channel.name.toLowerCase() !== 'moose-bot-spam') return;
+  if (msg.content[0] !== prefix) return;
 
   const args = msg.content.split(/ +/);         // split into array based on spaces
   const command = args.shift().toLowerCase();   // command from array to lower case
-  console.info(`Called command: ${command}`);   // print command to console (can be removed)
+  console.info(`Called command: ${command.substring(1)}`);   // print command to console (can be removed)
 
-  if (!bot.commands.has(command)) return;       // does a command exist from Object mapping at line ~9 (bot.commands.set)
+  if (!bot.commands.has(command.substring(1))) return;       // does a command exist from Object mapping at line ~9 (bot.commands.set)
 
   // if command exist, try executing, passing the msg and args array parameters
   // command execution in ./commands/<command>.js file, where the command is the typed and parsed command
   try {
-    bot.commands.get(command).execute(msg, args);
+    bot.commands.get(command.substring(1)).execute(msg, args);
   } catch (error) {
     console.error(error);
     msg.reply('Oops! Something went wrong trying to execute that command.');
