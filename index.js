@@ -1,4 +1,5 @@
-require('dotenv').config();                     // require .env file including oken
+const {prefix, token} = require('./config.json');
+
 const Discord = require('discord.js');          // require discord.js library (.py for python bots)
 
 const bot = new Discord.Client();               // build the bot client
@@ -6,13 +7,12 @@ bot.commands = new Discord.Collection();
 
 const botCommands = require('./commands');      // get and require our command folder
 
+// map all commands inside ./commands directory
 Object.keys(botCommands).map(key => {
   bot.commands.set(botCommands[key].name, botCommands[key]);
 });
 
-const TOKEN = process.env.TOKEN;                // get Token from .env table file
-
-bot.login(TOKEN);                               // sign bot in
+bot.login(token);
 
 // message displayed to console after successful login (can be removed)
 bot.on('ready', () => {
@@ -22,7 +22,7 @@ bot.on('ready', () => {
 // get the most recently typed message and parse
 bot.on('message', msg => {
   const args = msg.content.split(/ +/);         // split into array based on spaces
-  const command = args.shift().toLowerCase();   // array to lower case
+  const command = args.shift().toLowerCase();   // command from array to lower case
   console.info(`Called command: ${command}`);   // print command to console (can be removed)
 
   if (!bot.commands.has(command)) return;       // does a command exist from Object mapping at line ~9 (bot.commands.set)
