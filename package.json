@@ -1,0 +1,15 @@
+{
+  "name": "moose-bot",
+  "version": "0.5.0",
+  "description": "Bot for messing with our friend, Moose.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "William Abernathy",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.2.0"
+  }
+}
