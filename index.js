@@ -1,34 +1,38 @@
-require('dotenv').config();
-const Discord = require('discord.js');
+require('dotenv').config();                     // require .env file including oken
+const Discord = require('discord.js');          // require discord.js library (.py for python bots)
 
-const bot = new Discord.Client();
+const bot = new Discord.Client();               // build the bot client
 bot.commands = new Discord.Collection();
 
-const botCommands = require('./commands');
+const botCommands = require('./commands');      // get and require our command folder
 
 Object.keys(botCommands).map(key => {
   bot.commands.set(botCommands[key].name, botCommands[key]);
 });
 
-const TOKEN = process.env.TOKEN;
+const TOKEN = process.env.TOKEN;                // get Token from .env table file
 
-bot.login(TOKEN);
+bot.login(TOKEN);                               // sign bot in
 
+// message displayed to console after successful login (can be removed)
 bot.on('ready', () => {
   console.info(`Logged in as ${bot.user.tag}!`);
 });
 
+// get the most recently typed message and parse
 bot.on('message', msg => {
-  const args = msg.content.split(/ +/);
-  const command = args.shift().toLowerCase();
-  console.info(`Called command: ${command}`);
+  const args = msg.content.split(/ +/);         // split into array based on spaces
+  const command = args.shift().toLowerCase();   // array to lower case
+  console.info(`Called command: ${command}`);   // print command to console (can be removed)
 
-  if (!bot.commands.has(command)) return;
+  if (!bot.commands.has(command)) return;       // does a command exist from Object mapping at line ~9 (bot.commands.set)
 
+  // if command exist, try executing, passing the msg and args array parameters
+  // command execution in ./commands/<command>.js file, where the command is the typed and parsed command
   try {
     bot.commands.get(command).execute(msg, args);
   } catch (error) {
     console.error(error);
-    msg.reply('there was an error trying to execute that command!');
+    msg.reply('Oops! Something went wrong trying to execute that command.');
   }
 });
