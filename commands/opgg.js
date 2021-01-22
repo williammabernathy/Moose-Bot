@@ -7,9 +7,8 @@ module.exports = {
     if(args === null || args.length == 0) {
       msg.channel.send("https://na.op.gg/summoner/userName=MooseRx");
     }
-    // otherwise, link arg username
+    // otherwise, link args username via user input
     else {
-      console.info(`Joined args: ${args.join("+")}`);
       msg.channel.send(`https://na.op.gg/summoner/userName=${args.join("+")}`);
     }
   },

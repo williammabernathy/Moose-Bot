@@ -26,7 +26,7 @@ bot.on('message', msg => {
 
   const args = msg.content.split(/ +/);         // split into array based on spaces
   const command = args.shift().toLowerCase();   // command from array to lower case
-  console.info(`Called command: ${command.substring(1)}`);   // print command to console (can be removed)
+  console.info(`Called command: ${command.substring(1)}`);   // print command to console (can be removed or commented out)
 
   if (!bot.commands.has(command.substring(1))) return;       // does a command exist from Object mapping at line ~9 (bot.commands.set)
 
