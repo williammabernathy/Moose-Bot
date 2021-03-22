@@ -1,4 +1,32 @@
-const { prefix, token } = require("./config.json");                     // include config file containing tokens
+const { prefix, token, riotToken } = require("./config.json");                     // include config file containing tokens
+const { Kayn, REGIONS } = require('kayn');
+
+const kayn = Kayn(riotToken)(
+  {
+    region: REGIONS.NORTH_AMERICA,
+    apiURLPrefix: 'https://%s.api.riotgames.com',
+    locale: 'en_US',
+    debugOptions: {
+      isEnabled: true,
+      showKey: false,
+    },
+    requestOptions: {
+      shouldRetry: true,
+      numberOfRetriesBeforeAbort: 3,
+      delayBeforeRetry: 1000,
+      burst: false,
+      shouldExitOn403: false,
+    },
+    cacheOptions: {
+      cache: null,
+      timeToLives: {
+        useDefault: false,
+        byGroup: {},
+        byMethod: {},
+      },
+    },
+  }
+)
 
 const Discord = require("discord.js");                                  // require discord.js library (.py for python bots)
 const Sequelize = require("sequelize");                                 // database package
@@ -8,11 +36,16 @@ bot.commands = new Discord.Collection();
 
 const botCommands = require("./commands");                              // get and require our command folder
 
+kayn.Summoner.by.name('MooseRX').callback(function(err, summoner) {
+  console.log('Found MooseRX');
+})
+
 // map all commands inside ./commands directory
 Object.keys(botCommands).map((key) => {
   bot.commands.set(botCommands[key].name, botCommands[key]);
 });
 
+// set up database
 const sequelize = new Sequelize("database", "user", "password", {
   host: "localhost",
   dialect: "sqlite",
@@ -87,7 +120,7 @@ bot.on("message", (msg) => {
   // if command exist, try executing, passing the msg and args array parameters
   // command execution in ./commands/<command>.js file, where the command is the typed and parsed command
   try {
-    //bot.commands.get(command.substring(1)).execute(msg, args);
+    bot.commands.get(command.substring(1)).execute(msg, args);
   } catch (error) {
     console.error(error);
     msg.reply("Oops! Something went wrong trying to execute that command.");
