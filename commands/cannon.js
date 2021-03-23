@@ -26,37 +26,13 @@ module.exports = {
         'O0Ee966CqqPFWDWTAshsczLg4ozjprwFEHFwSZAJcRM-jyODRJKlvNIOAQ'
       ];
 
+      // display the loading message then save the message id
+      // to be edited later
       msg.channel.send(`One moment, checking constraints...`)
         .then((thisMsg) => {
           loadingMessage = thisMsg.id;
-          console.log(loadingMessage);
         })
         .catch(console.error);
-      /*
-        .then((msg2) => {
-          async function test() {
-            while (waiting) {
-              var periodsEnding = 1;
-              var loadingInd = `.`;
-
-              console.log('while loop: ' + periodsEnding);
-              await msg2.edit(`One moment, checking constraints${loadingInd.repeat(periodsEnding)}`);
-
-              periodsEnding++;
-
-              if (periodsEnding > 3) {
-                periodsEnding = 1;
-              }
-
-              await sleepPromise(300);
-            }
-          }
-          test();
-        }).catch(console.error);
-
-      function sleepPromise(milliseconds) {
-        return new Promise(resolve => setTimeout(resolve, milliseconds));
-      }*/
 
       // async function to check all of moose's accounts and see if he's online
       async function checkAllAccounts() {
@@ -70,10 +46,11 @@ module.exports = {
                   const tag = await Tags.findOne({ where: { name: 'MooseRx' } });
                   if (tag) {
                     tag.increment('cannons_missed');
-                    return (msg.channel.fetchMessages(`${loadingMessage}`)
+
+                    // return edited loading message
+                    return (msg.channel.messages.fetch(`${loadingMessage}`)
                       .then(finalMsg => {
-                        var fetchedMsg = finalMsg.first();
-                        fetchedMsg.edit(`Moose has missed **${tag.get('cannons_missed')}** cannons, "but is still cracked"`);
+                        finalMsg.edit(`Moose has missed **${tag.get('cannons_missed')}** cannons, "but is still cracked"`);
                       })
                       .catch(console.error));
                   }
@@ -104,14 +81,18 @@ module.exports = {
 
         // isInGame remains false, so moose is not in a game
         if (!inGameFinalCheck) {
-          msg.channel.send(`Moose is currently not in a game.`);
+          msg.channel.messages.fetch(`${loadingMessage}`)
+            .then(finalMsg => {
+              finalMsg.edit(`Moose is currently not in a game.`);
+            })
+            .catch(console.error)
         }
       }
 
       checkInGameResolution();
     }
     else {
-      msg.channel.send(`:no_entry_sign: Please wait ***${Math.floor((currentDate - recentDate) / 1000)} seconds*** before using the !cannon command again.`)
+      msg.channel.send(`:timer: Please wait ***${Math.floor(((currentDate - recentDate) / 1000) - 10) * -1} seconds*** before using the !cannon command again. :timer: `)
       /*
       .then((thisMsg) => {
         thisMsg.delete((currentDate - recentDate));

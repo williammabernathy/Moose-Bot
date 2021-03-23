@@ -9,7 +9,7 @@
   "author": "William Abernathy",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^11.6.4",
+    "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "kayn": "^0.10.2",
     "sequelize": "^6.4.0",
