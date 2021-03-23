@@ -7,6 +7,7 @@ module.exports = {
                         '!help: pings Igifoshifo and lists a couple helpful options.\n' +
                         '!commands: list a full list of supported commands (what you\'re seeing now.\n' +
                         '!cannon: when MooseRx misses a cannon, can be called out in chat to keep a tallying count. \n' +
+                        '                   -Constraits: In game & hasn\'t been called recently.\n' +
                         '!opgg <league tag>: links to specified users opgg. If left blank, defaults to MooseRx.\n');
     },
   };

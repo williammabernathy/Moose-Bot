@@ -6,35 +6,56 @@ module.exports = {
   execute(msg, args) {
     const { Tags, kayn } = require("../index.js");
 
-    kayn.Summoner.by.name('MooseRx')
-      .callback(function (error, summoner) {
-        console.log(summoner);
+    msg.channel.send(`One moment, checking constraints..`);
+
+    // value used to check if moose is currently in a game
+    var isInGame = false;
+
+    var accSummIDs = [
+      '0XjtriK05VQ5-M-NJJnmbEJ1Nj8lAf3ootWGZsDMka1bW7o',
+      'FwyAqeEP_SiJ2RrP2ZoqzjrAztG-RQx9Tw1NEbmsDSIzgDhEw8aCOfQUzw',
+      'T70Zv4BvEy0kkUX_4NQIBA8qVFYYptTEyJ49MKpBNWVMnm8',
+      'mwpRV8mt2cS_yOBgR-n9qmofeIHqb2u7rxLoINd75pcQh9w',
+      'O0Ee966CqqPFWDWTAshsczLg4ozjprwFEHFwSZAJcRM-jyODRJKlvNIOAQ'
+    ];
+
+    function checkAllAccounts() {
+      return new Promise(resolve => {
+        var i;
+        for (i = 0; i < 5; i++) {
+          kayn.CurrentGame.by.summonerID(accSummIDs[i])
+            .then(currentMatch => {
+              // function to update cannon's missed
+              async function incrCannonCount() {
+                const tag = await Tags.findOne({ where: { name: 'MooseRx' } });
+                if (tag) {
+                  tag.increment('cannons_missed');
+                  return msg.channel.send(`Moose has missed ${tag.get('cannons_missed')} cannons, "but is still cracked"`);
+                }
+              }
+
+              // call function to increment cannon count
+              incrCannonCount();
+
+              resolve(isInGame = true);
+            })
+            .catch(error => console.error('Not in game'));
+        }
       })
+    }
 
-    kayn.Matchlist.by.accountID('JazaMewXPI-bcGY_6PykYqphxv3i7T8DetrmOokdRhf86PE')
-      .query({
-        season: 11,
-      })
-      .callback(function (err, matchlist) {
-        console.log(matchlist)
-      });
+    async function checkInGameResolution() {
+ 
+      // wait for promises to check if moose is in a game
+      var inGameFinalCheck = await checkAllAccounts();
 
-    kayn.CurrentGame.by.summonerID('0XjtriK05VQ5-M-NJJnmbEJ1Nj8lAf3ootWGZsDMka1bW7o')
-      .callback(function (err, currentMatch) {
-        console.log(currentMatch)
-      });
-
-    // function to update cannon count in sql database
-    // using the name MooseRx
-    async function incrCannonCount() {
-      const tag = await Tags.findOne({ where: { name: 'MooseRx' } });
-      if (tag) {
-        tag.increment('cannons_missed');
-        return msg.channel.send(`Moose has missed ${tag.get('cannons_missed')} cannons.`);
+      // isInGame remains false, so moose is not in a game
+      if (!inGameFinalCheck) {
+        msg.channel.send(`Moose is currently not in a game.`);
       }
     }
 
-    incrCannonCount();
+    checkInGameResolution();
 
   },
 };
