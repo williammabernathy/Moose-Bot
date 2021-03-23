@@ -7,16 +7,19 @@ module.exports = {
     const { Discord } = require("../index.js");
 
     const introEmbed = new Discord.MessageEmbed()
+      .setColor('#0099ff')
       .setTitle('Moose Bot')
-      .setDescription('Some description here')
+      .setDescription('Bot designed to track MooseRx\'s League of Legends endeavors with additional features regarding League of Legends stats and more!')
       .addFields(
-        { name: 'Regular field title', value: 'Some value here' },
-        { name: '\u200B', value: '\u200B' },
-        { name: 'Inline field title', value: 'Some value here', inline: true },
-        { name: 'Inline field title', value: 'Some value here', inline: true },
+        { name: '!intro', value: 'Posts this embedded message.', inline: true },
+        { name: '!commands', value: 'Displays a quick and simple list of commands', inline: true },
+        { name: '!help', value: 'Pings Igifoshifo and also sends a message requesting help.', inline: true },
+        { name: '!opgg <username: optional>', value: 'Post link to opgg of specified username. \nIf left blank, defaults to list of Moose\'s accounts', inline: true },
+        { name: '!cannon', value: 'Keeps a tally of cannons missed by Moose (not bound to specific account, but collection of accounts)', inline: true },
+        { name: 'And more...', value: 'Additional hidden features not mentioned by the bot or in documentation! \nCheck out the full list by following the footer link, so use !commands to see a simple list.', inline: true },
+
       )
-      .setTimestamp()
-      .setFooter('Full details at: <https://github.com/williammabernathy/Moose-Bot>');
+      .setFooter('Full details at: <https://github.com/williammabernathy/Moose-Bot#moose-bot>');
 
     msg.channel.send(introEmbed);
   },
