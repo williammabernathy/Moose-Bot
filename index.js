@@ -3,7 +3,7 @@ const { Kayn, REGIONS } = require('kayn');
 
 const Discord = require("discord.js");                                  // require discord.js library (.py for python bots)
 const Sequelize = require("sequelize");                                 // database package
-let recentDate = new Date();
+global.recentDate = new Date();
 
 const bot = new Discord.Client();                                       // build the bot client
 bot.commands = new Discord.Collection();
@@ -60,7 +60,7 @@ const kayn = Kayn(riotToken)(
 )
 
 // export 'database' reference to moose's cannon call tag for use in cannon.js
-module.exports = { Tags, kayn, recentDate };
+module.exports = { Discord, Tags, kayn, recentDate };
 
 bot.once("ready", () => {
   Tags.sync();
