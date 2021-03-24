@@ -8,4 +8,5 @@ module.exports = {
     Intro: require('./intro'),
     OPGG: require('./opgg'),
     Daddy: require('./daddy'),
+    Stats: require('./stats'),
   };
