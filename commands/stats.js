@@ -58,6 +58,7 @@ module.exports = {
             attachment = new Discord.MessageAttachment(`./assets/ranked-emblems/Emblem_${tier}.png`, 'rankedIcon.png');
 
             embeddedMessage = new Discord.MessageEmbed()
+                .setColor('#008000')
                 .attachFiles(attachment)
                 .setTitle(smnName)
                 .setDescription('Ranked 5v5 solo/duo queue performance for current season.')

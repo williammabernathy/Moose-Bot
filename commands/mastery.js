@@ -4,7 +4,7 @@ module.exports = {
     execute(msg, args) {
         const { Discord, kayn } = require("../index.js");
 
-        var summoner, fullMastery, allChampions, masteryMessage;
+        var summoner, fullMastery, allChampions, masteryMessage, attachment;
 
         // if empty, default to mooserx
         if (!args.length) {
@@ -58,26 +58,50 @@ module.exports = {
 
         // create the embedded message to display in chat
         async function createEmbeddedMessage(fullMastery, allChampions) {
-            var embeddedMessage, championID, championName, championLevel, championPoints;
+            var embeddedMessage, championName, maxFieldConstraint = 0;
 
-            //console.log(allChampions.data['Aatrox']);             //this works?
+            attachment = new Discord.MessageAttachment(`./assets/mastery/mastery7.png`, 'mastery.png');
+
+            embeddedMessage = {
+                color: '#9370DB',
+                title: `Mastery for ${args}`,
+                thumbnail: {
+                    url: 'attachment://mastery.png',
+                },
+                description: 'Mastery for top 8 champions by total mastery points (limited by fields)\n\n',
+                fields: [
+
+                ],
+            }
 
             for (var item in fullMastery) {
-                for (var champion in allChampions.data) {
-                    if (allChampions.data[champion].key == fullMastery[item]['championId']) {
-                        console.log('found champ');
-                        break;
-                    }
-                }
-
                 // don't parse anything below mastery level 5
                 if (fullMastery[item]['championLevel'] < 5) {
                     break;
                 }
-            }
 
-            embeddedMessage = new Discord.MessageEmbed()
-                .setTitle('Mastery');
+                // get champion name that to compare to id in mastery data return
+                for (var champion in allChampions.data) {
+                    championName = champion;
+
+                    // if the champion name matches the champion id form mastery data, build fields
+                    if (allChampions.data[champion].key == fullMastery[item]['championId']) {
+                        maxFieldConstraint += 3;
+                        if (maxFieldConstraint > 24) {
+                            break;
+                        }
+
+                        var leftMost = { name: 'Champion', value: championName, inline: true };
+                        var middle = { name: 'Mastery Level', value: fullMastery[item]['championLevel'], inline: true };
+                        var rightMost = { name: 'Mastery Points', value: fullMastery[item]['championPoints'], inline: true };
+
+                        embeddedMessage.fields.push(leftMost);
+                        embeddedMessage.fields.push(middle);
+                        embeddedMessage.fields.push(rightMost);
+                        break;
+                    }
+                }
+            }
 
             return embeddedMessage;
         }
@@ -102,8 +126,7 @@ module.exports = {
                 else {
                     masteryMessage = await createEmbeddedMessage(fullMastery, allChampions);
 
-                    console.log('end');
-                    //msg.channel.send(masteryMessage);
+                    msg.channel.send({ files: [attachment], embed: masteryMessage });
                 }
             }
         }
