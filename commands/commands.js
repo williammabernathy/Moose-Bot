@@ -9,6 +9,7 @@ module.exports = {
                         '**!commands**: list a full, simple list of supported commands (what you\'re seeing now).\n' +
                         '**!cannon**: when MooseRx misses a cannon, can be called out in chat to keep a tallying count. \n' +
                         '                  - constraits: In game & hasn\'t been called recently (7 second cooldown). \n' +
+                        '**!stats** *<league username>*: displays current ranked 5v5 solo/duo stats. If left blank, defaults to MooseRx. \n' + 
                         '**!opgg** *<league username>*: links to specified users opgg. If left blank, defaults to Moose\'s accounts. \n\n' + 
 
                         'Plus a few hidden features!\n\n' + 

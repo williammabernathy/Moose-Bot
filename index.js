@@ -4,6 +4,9 @@ const { Kayn, REGIONS } = require('kayn');
 const Discord = require("discord.js");                                  // require discord.js library (.py for python bots)
 const Sequelize = require("sequelize");                                 // database package
 global.recentDate = new Date();
+var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+var startDate = new Date();
+global.formattedStartDate = startDate.toLocaleDateString('en-US', options);
 
 const bot = new Discord.Client();                                       // build the bot client
 bot.commands = new Discord.Collection();
