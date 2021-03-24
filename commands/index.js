@@ -7,4 +7,5 @@ module.exports = {
     Commands: require('./commands'),
     Intro: require('./intro'),
     OPGG: require('./opgg'),
+    Daddy: require('./daddy'),
   };

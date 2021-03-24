@@ -74,9 +74,6 @@ bot.on("message", (msg) => {
     msg.pin();
   }
 
-  // make sure text is in specified channel, moose-bot-spam
-  if (msg.channel.name.toLowerCase() !== "moose-bot-spam") return;
-
   // message must contain ! prefix
   if (msg.content[0] !== prefix) return;
 
