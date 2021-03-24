@@ -9,4 +9,5 @@ module.exports = {
     OPGG: require('./opgg'),
     Daddy: require('./daddy'),
     Stats: require('./stats'),
+    Mastery: require('./mastery'),
   };

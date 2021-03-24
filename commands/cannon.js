@@ -50,7 +50,7 @@ module.exports = {
                     // return edited loading message
                     return (msg.channel.messages.fetch(`${loadingMessage}`)
                       .then(finalMsg => {
-                        finalMsg.edit(`Moose has missed **${tag.get('cannons_missed')}** cannons since ${formattedStartDate} (but is still cracked)`);
+                        finalMsg.edit(`Moose has missed **${tag.get('cannons_missed')}** cannons since ${formattedStartDate} (but is still cracked).`);
                       })
                       .catch(console.error));
                   }
