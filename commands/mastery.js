@@ -68,18 +68,15 @@ module.exports = {
                 thumbnail: {
                     url: 'attachment://mastery.png',
                 },
-                description: 'Mastery for top 8 champions by total mastery points (limited by fields)\n\n',
+                description: 'Mastery for top 15 champions by total mastery points (limited by fields)\n\n',
                 fields: [
-
+                    { name: 'Champion', value: ' \n', inline: true },
+                    { name: 'Mastery Level', value: ' \n', inline: true },
+                    { name: 'Mastery Points', value: ' \n', inline: true },
                 ],
             }
 
             for (var item in fullMastery) {
-                // don't parse anything below mastery level 5
-                if (fullMastery[item]['championLevel'] < 5) {
-                    break;
-                }
-
                 // get champion name that to compare to id in mastery data return
                 for (var champion in allChampions.data) {
                     championName = champion;
@@ -87,17 +84,13 @@ module.exports = {
                     // if the champion name matches the champion id form mastery data, build fields
                     if (allChampions.data[champion].key == fullMastery[item]['championId']) {
                         maxFieldConstraint += 3;
-                        if (maxFieldConstraint > 24) {
+                        if (maxFieldConstraint > 45) {
                             break;
                         }
 
-                        var leftMost = { name: 'Champion', value: championName, inline: true };
-                        var middle = { name: 'Mastery Level', value: fullMastery[item]['championLevel'], inline: true };
-                        var rightMost = { name: 'Mastery Points', value: fullMastery[item]['championPoints'], inline: true };
-
-                        embeddedMessage.fields.push(leftMost);
-                        embeddedMessage.fields.push(middle);
-                        embeddedMessage.fields.push(rightMost);
+                        embeddedMessage.fields[0].value += championName + '\n\n';
+                        embeddedMessage.fields[1].value += fullMastery[item]['championLevel'] + '\n\n';
+                        embeddedMessage.fields[2].value += fullMastery[item]['championPoints'].toLocaleString() + '\n\n';
                         break;
                     }
                 }
@@ -120,7 +113,7 @@ module.exports = {
                 allChampions = await getAllChampions();
 
                 // if mastery results were found using the summoner id, continue to post message
-                if (fullMastery === 0) {
+                if (fullMastery.length == 0) {
                     msg.channel.send(`No mastery data found for '${args}'`);
                 }
                 else {
