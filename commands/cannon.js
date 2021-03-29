@@ -12,7 +12,7 @@ module.exports = {
         const tag = await Tags.findOne({ where: { name: 'MooseRx' } });
         if (tag) {
           // return edited loading message
-          return msg.channel.send(`Moose has currently missed **${tag.get('cannons_missed')-1}** cannons since ${formattedStartDate} (but is still cracked).`);
+          return msg.channel.send(`Moose has currently missed **${tag.get('cannons_missed')}** cannons since ${formattedStartDate} (but is still cracked).`);
         }
       }
 
@@ -60,7 +60,7 @@ module.exports = {
                       // return edited loading message
                       return (msg.channel.messages.fetch(`${loadingMessage}`)
                         .then(finalMsg => {
-                          finalMsg.edit(`:arrow_double_up: Moose has missed **${tag.get('cannons_missed')}** cannons since ${formattedStartDate} (but is still cracked).`);
+                          finalMsg.edit(`:arrow_double_up: Moose has missed **${tag.get('cannons_missed')+1}** cannons since ${formattedStartDate} (but is still cracked).`);
                         })
                         .catch(console.error));
                     }

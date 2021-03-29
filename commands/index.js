@@ -10,4 +10,5 @@ module.exports = {
     Daddy: require('./daddy'),
     Stats: require('./stats'),
     Mastery: require('./mastery'),
+    Dev: require('./dev'),
   };
