@@ -15,7 +15,7 @@ module.exports = {
         { name: '!commands', value: 'Displays a quick and simple list of commands', inline: true },
         { name: '!help', value: 'Pings Igifoshifo and also sends a message requesting help.', inline: true },
         { name: '!opgg <username: optional>', value: 'Post link to opgg of specified username. \nIf left blank, defaults to list of Moose\'s accounts', inline: true },
-        { name: '!cannon', value: 'Keeps a tally of cannons missed by Moose (not bound to specific account, but collection of accounts)', inline: true },
+        { name: '!cannon <\'cannon\': option>', value: 'Keeps a tally of cannons missed by Moose (not bound to specific account, but collection of accounts). !cannon count display total cannons missed.', inline: true },
         { name: 'And more...', value: 'Additional hidden features not mentioned by the bot or in documentation! \nCheck out the full list by following the footer link, so use !commands to see a simple list.', inline: true },
 
       )
