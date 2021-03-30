@@ -36,6 +36,11 @@ module.exports = {
                     msg.channel.send('Missing value/Value passed to cannon table must be an integer.');
                 }
             }
+            else if (args[0] === 'flush') {
+                kayn.flushCache()
+                    .then(console.log)
+                    .catch(console.err)
+            }
             else {
                 msg.channel.send('Please specify a sub command.');
             }
