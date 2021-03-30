@@ -1,5 +1,5 @@
 const { prefix, token, riotToken } = require("./config.json");                     // include config file containing tokens
-const { Kayn, REGIONS } = require('kayn');
+const { Kayn, REGIONS, METHOD_NAMES, BasicJSCache } = require('kayn');
 
 const Discord = require("discord.js");                                  // require discord.js library (.py for python bots)
 const Sequelize = require("sequelize");                                 // database package
@@ -57,10 +57,36 @@ async function addMoose() {
 // call above function
 addMoose();
 
+const myCache = new BasicJSCache();
+
 // setup kayn for riot api calls
-const kayn = Kayn(riotToken)(
-  // custom kayn config parameters here
-)
+const kayn = Kayn(riotToken)({
+  region: 'na',
+  locale: 'en_US',
+  debugOptions: {
+    isEnabled: true,
+    showKey: false,
+  },
+  requestOptions: {
+    shouldRetry: true,
+    numberOfRetriesBeforeAbort: 3,
+    delayBeforeRetry: 1000,
+  },
+  cacheOptions: {
+    cache: myCache,
+    timeToLives: {
+      useDefault: true,
+      byGroup: {
+        DDRAGON: 1000 * 60 * 60 * 24 * 30, // 1 month
+        SUMMONER: 1000 * 60 * 60 * 24 * 30, 
+        CHAMPION_MASTERY: 1000 * 60 * 60 * 24,  // 1 day
+      },
+      byMethod: {
+        [METHOD_NAMES.SPECTATOR.GET_CURRENT_GAME_INFO_BY_SUMMONER]: 3000,
+      },
+    },
+  },
+});
 
 // export 'database' reference to moose's cannon call tag for use in cannon.js
 module.exports = { Discord, Tags, kayn, recentDate };

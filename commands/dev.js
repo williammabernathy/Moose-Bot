@@ -5,8 +5,6 @@ module.exports = {
         var { Tags, kayn } = require("../index.js");
         var { devs } = require("../config.json");
 
-        console.log(devs)
-
         // check if the user issuing the !dev command is Igifoshifo
         if (devs.indexOf(msg.author.id.toString()) < 0) {
             msg.channel.send('You do not have permission to use this command.');
