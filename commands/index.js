@@ -11,4 +11,5 @@ module.exports = {
     Stats: require('./stats'),
     Mastery: require('./mastery'),
     Dev: require('./dev'),
+    History: require('./history'),
   };
