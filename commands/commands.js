@@ -11,6 +11,7 @@ module.exports = {
                         '                    - constraits: In game & hasn\'t been called recently (7 second cooldown). \n' +
                         '**!stats** *<league username: options>*: displays current ranked 5v5 solo/duo stats. If left blank, defaults to MooseRx. \n' + 
                         '**!mastery** *<league username: options>*: displays mastery points for 15 champions with highest mastery level. If left blank, defaults to MooseRx. \n' + 
+                        '**!history** *<league username: options>*: displays most recent 5 games played. If left blank, defaults to MooseRx. \n' +
                         '**!opgg** *<league username: options>*: links to specified users opgg. If left blank, defaults to Moose\'s accounts. \n\n' + 
 
                         'Plus a few hidden features!\n\n' + 

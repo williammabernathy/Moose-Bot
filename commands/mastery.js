@@ -58,13 +58,13 @@ module.exports = {
 
         // create the embedded message to display in chat
         async function createEmbeddedMessage(fullMastery, allChampions) {
-            var embeddedMessage, championName;
+            var embeddedMessage, championName, maxFieldConstraint = 0;
 
             attachment = new Discord.MessageAttachment(`./assets/mastery/mastery7.png`, 'mastery.png');
 
             embeddedMessage = {
                 color: '#9370DB',
-                title: `Mastery for ${args}`,
+                title: `Mastery for ${summoner['name']}`,
                 thumbnail: {
                     url: 'attachment://mastery.png',
                 },

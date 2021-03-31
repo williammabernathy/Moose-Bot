@@ -5,7 +5,6 @@ module.exports = {
         const { Discord, kayn } = require("../index.js");
 
         var summoner,
-            smnIcons,
             fullMatchHistory,
             allChampions,
             matchMessage,
@@ -83,14 +82,14 @@ module.exports = {
         }
 
         // create the embedded message to display in chat
-        async function createEmbeddedMessage(recentFiveMatches, smnIcons, allChampions) {
-            var embeddedMessage, gameDuration, championName, WL, kills, deaths, assists, CS;
+        async function createEmbeddedMessage(recentFiveMatches, allChampions) {
+            var embeddedMessage, gameDuration, championName, WL, kills, deaths, assists, kda, CS, csPerMin;
 
             attachment = new Discord.MessageAttachment(`http://ddragon.leagueoflegends.com/cdn/11.7.1/img/profileicon/${summoner['profileIconId']}.png`, 'icon.png');
 
             embeddedMessage = {
                 color: '#FF4500',
-                title: `Match history for ${args}`,
+                title: `Match history for ${summoner['name']}`,
                 thumbnail: {
                     url: 'attachment://icon.png',
                 },
@@ -101,6 +100,7 @@ module.exports = {
 
             // parse through match data to gather relevant entries and build message
             recentFiveMatches.forEach(element => {
+                // calculate the game duration
                 var minutes = Math.floor(element['gameDuration'] / 60);
                 var seconds = element['gameDuration'] - minutes * 60;
                 gameDuration = minutes + 'm ' + seconds +'s';
@@ -117,30 +117,37 @@ module.exports = {
                                 championName = champion;
                             }
                         }
+
+                        // set win/loss
                         if (participant['stats']['win']) {
                             WL = "Victory"
                         }
                         else {
                             WL = "Defeat"
                         }
+
+                        // save specific data
                         kills = participant['stats']['kills'];
                         deaths = participant['stats']['deaths'];
                         assists = participant['stats']['assists'];
+                        kda = (kills + assists) / deaths;
                         CS = participant['stats']['totalMinionsKilled'] + participant['stats']['neutralMinionsKilled'];
+                        csPerMin = CS / minutes;
 
+                        // add inline fields to the embedded message
                         embeddedMessage.fields.push({ 
                             name: championName, 
-                            value: WL + '\n' + gameDuration, 
+                            value: WL + '\n' + gameDuration+'\n\n', 
                             inline: true 
                         });
                         embeddedMessage.fields.push({ 
-                            name: 'KDA', 
-                            value: kills+'/'+deaths+'/'+assists, 
+                            name: 'K/D/A', 
+                            value: kills+'/'+deaths+'/'+assists + '\n' + kda.toFixed(2) + ':1', 
                             inline: true 
                         });
                         embeddedMessage.fields.push({ 
                             name: 'CS', 
-                            value: CS, 
+                            value: '   ' + CS + '\n   ' + csPerMin.toFixed(2) + ' cs/min', 
                             inline: true 
                         });
                     }
@@ -171,7 +178,7 @@ module.exports = {
                 if (fullMatchHistory.length == 0 || fullMatchHistory == null || match == null) {
                     msg.channel.send(`No match data found for '${args}'`);
                 } else {
-                    matchMessage = await createEmbeddedMessage(recentFiveMatches, smnIcons, allChampions);
+                    matchMessage = await createEmbeddedMessage(recentFiveMatches, allChampions);
                     msg.channel.send({ files: [attachment], embed: matchMessage });
                 }
             }

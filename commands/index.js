@@ -8,7 +8,7 @@ module.exports = {
     Intro: require('./intro'),
     OPGG: require('./opgg'),
     Daddy: require('./daddy'),
-    Stats: require('./stats'),
+    Rank: require('./rank'),
     Mastery: require('./mastery'),
     Dev: require('./dev'),
     History: require('./history'),

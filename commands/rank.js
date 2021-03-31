@@ -1,6 +1,6 @@
 module.exports = {
-    name: 'stats',                   // command
-    description: 'per player stats',
+    name: 'rank',                   // command
+    description: 'per player rank stats',
     execute(msg, args) {
         const { Discord, kayn } = require("../index.js");
 
