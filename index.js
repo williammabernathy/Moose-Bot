@@ -77,12 +77,14 @@ const kayn = Kayn(riotToken)({
     timeToLives: {
       useDefault: true,
       byGroup: {
-        DDRAGON: 1000 * 60 * 60 * 24 * 30, // 1 month
+        DDRAGON: 1000 * 60 * 60 * 24 * 15, // 15 days
         SUMMONER: 1000 * 60 * 60 * 24 * 30, 
-        CHAMPION_MASTERY: 1000 * 60 * 60 * 24,  // 1 day
+        CHAMPION_MASTERY: 1000 * 60 * 60 * 24,  // 3 day
+        MATCH: 1000* 60 * 60 * 24 * 30,
       },
       byMethod: {
         [METHOD_NAMES.SPECTATOR.GET_CURRENT_GAME_INFO_BY_SUMMONER]: 3000,
+        [METHOD_NAMES.MATCH.GET_MATCHLIST]: 3000,
       },
     },
   },

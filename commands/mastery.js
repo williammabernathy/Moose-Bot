@@ -58,7 +58,7 @@ module.exports = {
 
         // create the embedded message to display in chat
         async function createEmbeddedMessage(fullMastery, allChampions) {
-            var embeddedMessage, championName, maxFieldConstraint = 0;
+            var embeddedMessage, championName;
 
             attachment = new Discord.MessageAttachment(`./assets/mastery/mastery7.png`, 'mastery.png');
 
@@ -105,7 +105,7 @@ module.exports = {
             summoner = await getSummonerID();
 
             // if a summoner id was found using the input name, continue on
-            if (summoner == undefined) {
+            if (summoner == undefined || summoner == null) {
                 msg.channel.send(`No summoner found for '${args}'.`);
             }
             else {
@@ -113,7 +113,7 @@ module.exports = {
                 allChampions = await getAllChampions();
 
                 // if mastery results were found using the summoner id, continue to post message
-                if (fullMastery.length == 0) {
+                if (fullMastery.length == 0 || fullMastery == null || allChampions == null) {
                     msg.channel.send(`No mastery data found for '${args}'`);
                 }
                 else {
