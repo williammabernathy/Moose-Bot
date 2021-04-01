@@ -12,6 +12,7 @@ module.exports = {
             match,
             particID,
             participant,
+            loadingMessage,
             recentFiveMatches = [];
 
         // if empty, default to mooserx
@@ -103,16 +104,16 @@ module.exports = {
                 // calculate the game duration
                 var minutes = Math.floor(element['gameDuration'] / 60);
                 var seconds = element['gameDuration'] - minutes * 60;
-                gameDuration = minutes + 'm ' + seconds +'s';
-            
+                gameDuration = minutes + 'm ' + seconds + 's';
+
                 var i;
                 // parse through each of the most recent 5 matches
-                for(i = 0; i < element['participantIdentities'].length; i++) {
-                    if (element['participantIdentities'][i]['player']['accountId'] == summoner["accountId"]){
+                for (i = 0; i < element['participantIdentities'].length; i++) {
+                    if (element['participantIdentities'][i]['player']['accountId'] == summoner["accountId"]) {
                         particID = element['participantIdentities'][i]['participantId'];                            // get participant ID
-                        participant = element['participants'][particID-1];                                          // get the full participant object based on ID
+                        participant = element['participants'][particID - 1];                                          // get the full participant object based on ID
                         // get the champion the user specified in args played this match
-                        for (var champion in allChampions.data){
+                        for (var champion in allChampions.data) {
                             if (allChampions.data[champion].key == participant['championId']) {
                                 championName = champion;
                             }
@@ -135,20 +136,20 @@ module.exports = {
                         csPerMin = CS / minutes;
 
                         // add inline fields to the embedded message
-                        embeddedMessage.fields.push({ 
-                            name: championName, 
-                            value: WL + '\n' + gameDuration+'\n\n', 
-                            inline: true 
+                        embeddedMessage.fields.push({
+                            name: championName,
+                            value: WL + '\n' + gameDuration + '\n\n',
+                            inline: true
                         });
-                        embeddedMessage.fields.push({ 
-                            name: 'K/D/A', 
-                            value: kills+'/'+deaths+'/'+assists + '\n' + kda.toFixed(2) + ':1', 
-                            inline: true 
+                        embeddedMessage.fields.push({
+                            name: 'K/D/A',
+                            value: kills + '/' + deaths + '/' + assists + '\n' + kda.toFixed(2) + ':1',
+                            inline: true
                         });
-                        embeddedMessage.fields.push({ 
-                            name: 'CS', 
-                            value: '   ' + CS + '\n   ' + csPerMin.toFixed(2) + ' cs/min', 
-                            inline: true 
+                        embeddedMessage.fields.push({
+                            name: 'CS',
+                            value: '   ' + CS + '\n   ' + csPerMin.toFixed(2) + ' cs/min',
+                            inline: true
                         });
                     }
                 }
@@ -159,12 +160,21 @@ module.exports = {
 
         // function containg series of events to build message and retrieve data
         async function postHistory() {
+            msg.channel.send(`One moment, gathering match data..`)
+                .then((thisMsg) => {
+                    loadingMessage = thisMsg.id;
+                })
+                .catch(console.error);
+
             // wait for id to be returned
             summoner = await getSummonerID();
 
             // if a summoner id was found using the input name, continue on
             if (summoner == undefined || summoner == null) {
-                msg.channel.send(`No summoner found for '${args}'.`);
+                msg.channel.messages.fetch(`${loadingMessage}`)
+                    .then(finalMsg => {
+                        finalMsg.edit(`:x: No summoner found for '${args}'.`);
+                    }).catch(console.error)
             } else {
                 fullMatchHistory = await getMatchHistory();
                 var i;
@@ -176,10 +186,16 @@ module.exports = {
 
                 // if mastery results were found using the summoner id, continue to post message
                 if (fullMatchHistory.length == 0 || fullMatchHistory == null || match == null) {
-                    msg.channel.send(`No match data found for '${args}'`);
+                    msg.channel.messages.fetch(`${loadingMessage}`)
+                        .then(finalMsg => {
+                            finalMsg.edit(`:x: No match data found for '${args}'.`);
+                        }).catch(console.error)
                 } else {
                     matchMessage = await createEmbeddedMessage(recentFiveMatches, allChampions);
-                    msg.channel.send({ files: [attachment], embed: matchMessage });
+                    msg.channel.messages.fetch(`${loadingMessage}`)
+                        .then(finalMsg => {
+                            msg.channel.send({ files: [attachment], embed: matchMessage });
+                        }).catch(console.error)
                 }
             }
         }

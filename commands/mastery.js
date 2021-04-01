@@ -106,7 +106,7 @@ module.exports = {
 
             // if a summoner id was found using the input name, continue on
             if (summoner == undefined || summoner == null) {
-                msg.channel.send(`No summoner found for '${args}'.`);
+                msg.channel.send(`:x: No summoner found for '${args}'.`);
             }
             else {
                 fullMastery = await getSummonerMastery();
@@ -114,7 +114,7 @@ module.exports = {
 
                 // if mastery results were found using the summoner id, continue to post message
                 if (fullMastery.length == 0 || fullMastery == null || allChampions == null) {
-                    msg.channel.send(`No mastery data found for '${args}'`);
+                    msg.channel.send(`:x: No mastery data found for '${args}'`);
                 }
                 else {
                     masteryMessage = await createEmbeddedMessage(fullMastery, allChampions);

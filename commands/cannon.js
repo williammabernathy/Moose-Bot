@@ -93,7 +93,7 @@ module.exports = {
           if (!inGameFinalCheck) {
             msg.channel.messages.fetch(`${loadingMessage}`)
               .then(finalMsg => {
-                finalMsg.edit(`Moose is currently not in a game.`);
+                finalMsg.edit(`:x: Moose is currently not in a game.`);
               })
               .catch(console.error)
           }

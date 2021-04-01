@@ -79,14 +79,14 @@ module.exports = {
 
             // if a summoner id was found using the input name, continue on
             if (summoner == undefined) {
-                msg.channel.send(`No summoner found for '${args}'.`);
+                msg.channel.send(`:x: No summoner found for '${args}'.`);
             }
             else {
                 fullLeague = await getSummonerLeague();
 
                 // if ranked 5v5 results were found using the summoner id, continue to post message
                 if (fullLeague.length == 0) {
-                    msg.channel.send(`No ranked data found for '${args}'`);
+                    msg.channel.send(`:x: No ranked data found for '${args}'`);
                 }
                 else {
                     statsMessage = await createEmbeddedMessage(fullLeague);
