@@ -3,11 +3,11 @@
 ```
 !ping
 ```
-- simple "pings" the bot. Expected reponse: 'Pong! I can hear you!'
+- simply "pings" the bot. Expected reponse: "Pong! I can hear you!"
 ```
 !intro
 ```
-- displays embedded introduction for Moose Bot
+- displays embedded message with the introduction for Moose Bot
 ```
 !commands
 ```
@@ -23,7 +23,7 @@
 - keeps a running track of how many cannons MooseRx has missed
 - constraints:
 1. Moose must be in game on one of his accounts
-2. 10 second cooldown to both prevent trolling and multiple calling this command at the same time incrementing the count multiple times
+2. 10 second cooldown to both prevent trolling and multiple people calling this command at the same time resulting in incrementing the count multiple times
 ```
 !opgg <optional: league of legends username>
 ```
