@@ -20,7 +20,7 @@ module.exports = {
     }
     else {
       // command can only be called once every 10 second
-      if (currentDate - recentDate > 0 * 1000) {
+      if (currentDate - recentDate > 10 * 1000) {
         // value used to check if moose is currently in a game
         global.recentDate = currentDate;
         var isInGame = false;
