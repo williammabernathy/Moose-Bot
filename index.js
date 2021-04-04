@@ -78,7 +78,7 @@ const kayn = Kayn(riotToken)({
       useDefault: true,
       byGroup: {
         DDRAGON: 1000 * 60 * 60 * 24 * 15, // 15 days
-        SUMMONER: 1000 * 60 * 60 * 24 * 30, 
+        SUMMONER: 1000 * 60 * 60 * 24, 
         CHAMPION_MASTERY: 1000 * 60 * 60 * 24,  // 3 day
         MATCH: 1000* 60 * 60 * 24 * 30,
       },

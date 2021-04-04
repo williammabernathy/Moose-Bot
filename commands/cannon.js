@@ -20,21 +20,23 @@ module.exports = {
     }
     else {
       // command can only be called once every 10 second
-      if (currentDate - recentDate > 10 * 1000) {
+      if (currentDate - recentDate > 0 * 1000) {
         // value used to check if moose is currently in a game
         global.recentDate = currentDate;
         var isInGame = false;
         var accountsNotInGame = 0;
-        var waiting = true;
+        var summonersChecked = 0;
         var loadingMessage;
 
-        var accSummIDs = [
-          '0XjtriK05VQ5-M-NJJnmbEJ1Nj8lAf3ootWGZsDMka1bW7o',
-          'FwyAqeEP_SiJ2RrP2ZoqzjrAztG-RQx9Tw1NEbmsDSIzgDhEw8aCOfQUzw',
-          'T70Zv4BvEy0kkUX_4NQIBA8qVFYYptTEyJ49MKpBNWVMnm8',
-          'mwpRV8mt2cS_yOBgR-n9qmofeIHqb2u7rxLoINd75pcQh9w',
-          'O0Ee966CqqPFWDWTAshsczLg4ozjprwFEHFwSZAJcRM-jyODRJKlvNIOAQ'
+        var accSummNames = [
+          'MooseRx',
+          'K7 Moose',
+          'PharmDeez Nuts',
+          'MooseBBN',
+          'Split push diff'
         ];
+
+        var accSummIDs = [];
 
         // display the loading message then save the message id
         // to be edited later
@@ -43,6 +45,27 @@ module.exports = {
             loadingMessage = thisMsg.id;
           })
           .catch(console.error);
+
+        // get the smn id for all of moose's accounts
+        async function getAllSummonerIDs(pos) {
+          return await new Promise((resolve) => {
+            kayn.CurrentGame.by.summonerID(accSummNames[pos])
+              .then(summoner => {
+                async function getSmnName() {
+                  accSummIDs.push(summoner['id']);
+                }
+                getSmnName();
+                if (summonersChecked === 5) {
+                  resolve();
+                }
+              })
+              .catch(error => {
+                //console.log(error)
+                console.error('No summoner found for: ' + accSummNames[pos]);
+                resolve();
+              });
+          }).catch(error => console.log(error));
+        }
 
         // async function to check all of moose's accounts and see if he's online
         async function checkAllAccounts() {
@@ -54,43 +77,46 @@ module.exports = {
                   // function to update cannon's missed
                   async function incrCannonCount() {
                     const tag = await Tags.findOne({ where: { name: 'MooseRx' } });
+                    console.log(tag);
                     if (tag) {
                       tag.increment('cannons_missed');
-
                       // return edited loading message
                       return (msg.channel.messages.fetch(`${loadingMessage}`)
                         .then(finalMsg => {
-                          finalMsg.edit(`:arrow_double_up: Moose has missed **${tag.get('cannons_missed')+1}** cannons since ${formattedStartDate} (but is still cracked).`);
+                          finalMsg.edit(`:arrow_double_up: Moose has missed **${tag.get('cannons_missed') + 1}** cannons since ${formattedStartDate} (but is still cracked).`);
                         })
                         .catch(console.error));
                     }
                   }
-
                   // call function to increment cannon count
                   incrCannonCount();
-
-                  waiting = false;
                   resolve(isInGame = true);
                 })
                 .catch(error => {
+                  console.log(error)
                   console.error('Not in game');
                   accountsNotInGame++;
                   if (accountsNotInGame === 5) {
-                    waiting = false;
                     resolve(isInGame = false);
                   }
                 });
             }
+            resolve(isInGame = false);
           }).catch(error => console.log(error));
         }
 
         async function checkInGameResolution() {
           // wait for promises to check if moose is in a game
-
+          var i;
+          for (i = 0; i < accSummNames.length; i++) {
+            await getAllSummonerIDs(i);
+          }
+          console.log('between functions')
           var inGameFinalCheck = await checkAllAccounts();
+          console.log('after game check')
 
           // isInGame remains false, so moose is not in a game
-          if (!inGameFinalCheck) {
+          if (!inGameFinalCheck || accSummIDs == null) {
             msg.channel.messages.fetch(`${loadingMessage}`)
               .then(finalMsg => {
                 finalMsg.edit(`:x: Moose is currently not in a game.`);
@@ -103,12 +129,6 @@ module.exports = {
       }
       else {
         msg.channel.send(`:timer: Please wait ***${Math.floor(((currentDate - recentDate) / 1000) - 10) * -1} seconds*** before using the !cannon command again. :timer: `)
-        /*
-        .then((thisMsg) => {
-          thisMsg.delete((currentDate - recentDate));
-        })
-        .catch(console.error);
-        */
       }
     }
   },
