@@ -25,13 +25,12 @@ module.exports = {
         global.recentDate = currentDate;
         var isInGame = false;
         var accountsNotInGame = 0;
-        var summonersChecked = 0;
         var loadingMessage;
 
         var accSummNames = [
           'MooseRx',
           'K7 Moose',
-          'PharmDeez Nuts',
+          'PharmDeezNuts',
           'MooseBBN',
           'Split push diff'
         ];
@@ -49,15 +48,13 @@ module.exports = {
         // get the smn id for all of moose's accounts
         async function getAllSummonerIDs(pos) {
           return await new Promise((resolve) => {
-            kayn.CurrentGame.by.summonerID(accSummNames[pos])
+            kayn.Summoner.by.name(accSummNames[pos])
               .then(summoner => {
                 async function getSmnName() {
                   accSummIDs.push(summoner['id']);
                 }
                 getSmnName();
-                if (summonersChecked === 5) {
-                  resolve();
-                }
+                resolve();
               })
               .catch(error => {
                 //console.log(error)
@@ -77,7 +74,6 @@ module.exports = {
                   // function to update cannon's missed
                   async function incrCannonCount() {
                     const tag = await Tags.findOne({ where: { name: 'MooseRx' } });
-                    console.log(tag);
                     if (tag) {
                       tag.increment('cannons_missed');
                       // return edited loading message
@@ -93,7 +89,7 @@ module.exports = {
                   resolve(isInGame = true);
                 })
                 .catch(error => {
-                  console.log(error)
+                  //console.log(error)
                   console.error('Not in game');
                   accountsNotInGame++;
                   if (accountsNotInGame === 5) {
@@ -111,12 +107,10 @@ module.exports = {
           for (i = 0; i < accSummNames.length; i++) {
             await getAllSummonerIDs(i);
           }
-          console.log('between functions')
           var inGameFinalCheck = await checkAllAccounts();
-          console.log('after game check')
 
           // isInGame remains false, so moose is not in a game
-          if (!inGameFinalCheck || accSummIDs == null) {
+          if (!inGameFinalCheck) {
             msg.channel.messages.fetch(`${loadingMessage}`)
               .then(finalMsg => {
                 finalMsg.edit(`:x: Moose is currently not in a game.`);
